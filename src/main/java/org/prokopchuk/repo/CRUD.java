@@ -11,7 +11,7 @@ public interface CRUD<T> {
     int insert(T object);
     List<T> readAll();
     Optional<T> readById(int id);
-    int updateById(int id);
+    int updateCompany(Company company);
     void deleteById(int id);
 
 }

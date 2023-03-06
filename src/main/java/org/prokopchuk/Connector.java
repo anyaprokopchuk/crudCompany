@@ -11,7 +11,7 @@ public class Connector {
     private static final String URL = "jdbc:postgresql://localhost/test";
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "postgres";
-    private final Connection connection;
+    private Connection connection;
 
     public Connector() {
         try {
@@ -21,8 +21,8 @@ public class Connector {
             throw new RuntimeException("Failed to initialized connection");
         }
     }
-    public Connection getConnection() {
-        return connection;
+    public  Connection getConnection() {
+        return new Connector().connection;
     }
     public void closeConnection() {
         try {

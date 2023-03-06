@@ -5,13 +5,10 @@ import org.prokopchuk.Company;
 import org.prokopchuk.Connector;
 import org.prokopchuk.util.CompanyParser;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 public class CompanyRepository implements CRUD<Company> {
@@ -20,8 +17,14 @@ public class CompanyRepository implements CRUD<Company> {
     private final static String DELETE = "Delete from companies where id = (?)";
     private final static String SELECT = "Select * from companies";
     private final static String SELECT_BY_ID = "Select * from companies where id = (?)";
+    private final static String UPDATE = "Update companies set " +
+            "name = (?)," +
+            "headquarters = (?)," +
+            "founding_year = (?)," +
+            "number_of_employees = (?) " +
+            "where id = (?)";
 
-    Connector connector = new Connector();
+    private final Connector connector = new Connector();
 
     @Override
     public int insert(Company company) {
@@ -78,8 +81,22 @@ public class CompanyRepository implements CRUD<Company> {
     }
 
     @Override
-    public int updateById(int id) {
-        return 0;
+    public int updateCompany(Company company) {
+        try {
+            PreparedStatement statement = connector.getConnection().prepareStatement(UPDATE);
+            statement.setString(1, company.getName());
+            statement.setString(2, company.getHeadquarters());
+            statement.setInt(3, company.getFounding_year());
+            statement.setInt(4, company.getNumber_of_employees());
+            statement.setInt(5, company.getId());
+            int i = statement.executeUpdate();
+            log.info("Updating with id " + company.getId() + " done successfully");
+            connector.closeConnection();
+            return i;
+        }
+        catch(SQLException e) {
+            throw new RuntimeException("Updating by id failed " + e.getMessage());
+        }
     }
 
     @Override

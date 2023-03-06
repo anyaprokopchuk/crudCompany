@@ -30,4 +30,9 @@ public class CompanyService {
         log.info("Reading companies by id");
         return repository.readById(id).orElseThrow(InstanceNotFoundException::new);
     }
+
+    public int updateCompany(Company company) {
+        log.info("Updating");
+        return repository.updateCompany(company);
+    }
 }
